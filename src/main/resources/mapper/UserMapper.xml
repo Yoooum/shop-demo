@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prprv.shop.mapper.UserMapper">
+
+    <!-- 开启二级缓存，实体类必须实现序列化 -->
+    <cache/>
+
+    <!-- resultMap 自定义映射 -->
+    <resultMap id="userMap" type="User">
+        <!-- id: 主键 -->
+        <id column="id" property="id"/>
+        <!-- result: 普通字段 -->
+        <result column="email" property="email"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="address" property="address"/>
+        <result column="phone" property="phone"/>
+        <result column="role" property="role"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
+    </resultMap>
+
+    <!-- int insertUser(User user); -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into `user` (`email`, `username`, `password`)
+        values (#{email}, #{username}, #{password})
+    </insert>
+
+    <!-- int updateUserById(User user); -->
+    <update id="updateUserById">
+        update `user` set `email`=#{email}, `username`=#{username}, `password`=#{password}, `phone`=#{phone}, `role`=#{role}
+        where id=#{id}
+    </update>
+
+    <!-- int updateUserByEmail(User user); -->
+    <update id="updateUserByEmail">
+        update `user`
+            <if test="email != null and email != ''">
+                <trim prefix="set" suffixOverrides=",">
+                    <if test="email != null and email != ''">`email`=#{email},</if>
+                    <if test="username != null and username != ''">`username`=#{username},</if>
+                    <if test="password != null and password != ''">`password`=#{password},</if>
+                    <if test="address != null and address != ''">`address`=#{address},</if>
+                    <if test="phone != null and phone != ''">`phone`=#{phone},</if>
+                    <if test="role != null">`role`=#{role},</if>
+                </trim>
+                <where>
+                    `email`=#{email}
+                </where>
+            </if>
+    </update>
+
+    <!-- int deleteUserById(Long id); -->
+    <delete id="deleteUserById">
+        delete from `user` where `id` = #{id}
+    </delete>
+
+    <!-- int deleteUserByEmail(String email); -->
+    <delete id="deleteUserByEmail">
+        delete from `user` where `email` = #{email}
+    </delete>
+
+    <sql id="userColumns">
+
+    </sql>
+
+    <!-- User selectUserById(Long id); -->
+    <select id="selectUserById" resultType="User">
+        select *
+        from `user`
+        where `id` = #{id}
+    </select>
+
+    <!-- User selectUserByEmail(String email); -->
+    <select id="selectUserByEmail" resultType="User">
+        select *
+        from `user`
+        where `email` = #{email}
+    </select>
+
+    <!-- List<User> selectUserByName(String username); -->
+    <select id="selectUserByName" resultType="User">
+        select *
+        from `user`
+        where `username` = #{username}
+    </select>
+
+    <!--
+    User selectUserByLogin(
+        @Param("email") String email,
+        @Param("password") String password);
+    -->
+    <select id="selectUserByLogin" resultType="User">
+        select *
+        from `user`
+        where `email` = #{email} and `password` = #{password}
+    </select>
+
+    <!-- List<User> selectAllUser(); -->
+    <select id="selectAllUser" resultType="User">
+        select *
+        from `user`
+    </select>
+</mapper>

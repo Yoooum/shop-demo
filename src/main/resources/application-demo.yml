@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: shop-demo
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dev_shop?serverTimezone=UTC
+    username:
+    password:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+server:
+  port: 8080
+  address: 0.0.0.0
+  servlet:
+    context-path: /
+
+
+mybatis:
+  # 配置mapper接口路径
+  mapper-locations: classpath:/mapper/*.xml
+  # 配置类型别名包路径
+  type-aliases-package: com.prprv.shop.model.entity
+  # 下划线映射为驼峰
+  configuration.map-underscore-to-camel-case: true
+
+
