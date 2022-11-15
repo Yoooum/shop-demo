@@ -1,4 +1,4 @@
-package com.prprv.shop.service.imp;
+package com.prprv.shop.service.impl;
 
 import com.prprv.shop.common.ResponseCode;
 import com.prprv.shop.exception.RequestException;

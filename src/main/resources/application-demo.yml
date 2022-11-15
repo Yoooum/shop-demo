@@ -6,9 +6,6 @@ spring:
     url: jdbc:mysql://localhost:3306/dev_shop?serverTimezone=UTC
     username:
     password:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
 
 server:
   port: 8080
@@ -16,6 +13,11 @@ server:
   servlet:
     context-path: /
 
+springdoc:
+  packages-to-scan: com.prprv.shop.controller
+  swagger-ui:
+    enabled: true
+    path: /doc
 
 mybatis:
   # 配置mapper接口路径
