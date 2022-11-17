@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prprv.shop.mapper.CartMapper">
+    <!-- 开启二级缓存，实体类必须实现序列化 -->
+    <cache/>
+    <!-- long insertShoppingCart(ShoppingCart shoppingCart); -->
+    <!-- 如果已经存在userId和productId则插入失败 -->
+    <insert id="insertCart" parameterType="Cart">
+        insert into `shopping_cart` (`user_id`, `product_id`, `quantity`, `checked`)
+        select #{userId}, #{productId}, #{quantity}, #{checked}
+        from dual
+        where not exists (
+            select *
+            from `shopping_cart`
+            where `user_id` = #{userId} and `product_id` = #{productId}
+            )
+    </insert>
+    <!-- long updateShoppingCartById(ShoppingCart shoppingCart); -->
+    <update id="updateCartById">
+        update `shopping_cart`
+        <set>
+            <if test="quantity != null and quantity != ''">`quantity`=#{quantity},</if>
+            <if test="checked != null and checked != ''">`checked`=#{checked},</if>
+            <if test="isDeleted != null and isDeleted != ''">`is_deleted`=#{isDeleted}</if>
+        </set>
+        where `product_id`=#{productId} and `user_id`=#{userId}
+    </update>
+    <!-- long deleteShoppingCartById(long id); -->
+    <delete id="deleteCartByUserId">
+        delete from `shopping_cart` where `user_id` = #{userId}
+    </delete>
+    <!-- ShoppingCart selectShoppingCartById(long id); -->
+    <!-- select c.id,c.user_id,c.product_id,c.quantity,c.checked,p.name,p.image,p.price from shopping_cart c left join product p on p.id = c.product_id -->
+    <select id="selectCartByUserId" resultType="com.prprv.shop.model.vo.CartVO">
+        select c.id,c.user_id,c.product_id,c.quantity,c.checked,p.name,p.image,p.price
+        from shopping_cart c
+            left join product p on p.id = c.product_id
+        where c.user_id = #{userId}
+    </select>
+    <!-- List<ShoppingCart> selectAllShoppingCart(); -->
+    <select id="selectAllCart" resultType="Cart">
+        select * from `shopping_cart`
+    </select>
+
+    <!-- long removeItemByProductId(long id); -->
+    <delete id="removeItemByProductId">
+        delete from `shopping_cart` where `product_id` = #{productId}
+    </delete>
+
+</mapper>

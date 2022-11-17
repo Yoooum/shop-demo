@@ -1,6 +1,7 @@
 package com.prprv.shop.model.entity;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serial;
@@ -11,7 +12,7 @@ import java.util.Date;
  * 商品表信息
  */
 @Data
-@Repository
+@Component
 public class Product implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

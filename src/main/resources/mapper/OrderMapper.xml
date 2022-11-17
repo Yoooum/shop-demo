@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prprv.shop.mapper.OrderMapper">
+    <!-- 开启二级缓存，实体类必须实现序列化 -->
+    <cache/>
+    <!-- long insert(Order order); -->
+    <insert id="insert" parameterType="Order">
+        insert into `order` (`user_id`, `order_no`, `payment`, `postage`,`status`,`payment_time`,`send_time`,`end_time`,`close_time`)
+        values (#{userId}, #{orderNo}, #{payment}, #{postage}, #{status}, #{paymentTime}, #{sendTime}, #{endTime}, #{closeTime})
+    </insert>
+    <!-- long updateOrderById(Order order); -->
+    <update id="updateOrderById">
+        update `order`
+        <set>
+            <if test="userId != null">`user_id`=#{userId},</if>
+            <if test="orderNo != null">`order_no`=#{orderNo},</if>
+            <if test="payment != null">`payment`=#{payment},</if>
+            <if test="postage != null">`postage`=#{postage},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="paymentTime != null">`payment_time`=#{paymentTime},</if>
+            <if test="sendTime != null">`send_time`=#{sendTime},</if>
+            <if test="endTime != null">`end_time`=#{endTime},</if>
+            <if test="closeTime != null">`close_time`=#{closeTime},</if>
+        </set>
+        where `id`=#{id}
+    </update>
+    <!-- long deleteOrderById(long id); -->
+    <delete id="deleteOrderById">
+        delete from `order` where `id` = #{id}
+    </delete>
+    <!-- Order selectOrderById(long id); -->
+    <select id="selectOrderById" resultType="Order">
+        select * from `order` where `id` = #{id}
+    </select>
+    <!-- List<Order> selectAllOrder(); -->
+    <select id="selectAllOrder" resultType="Order">
+        select * from `order`
+    </select>
+
+</mapper>
