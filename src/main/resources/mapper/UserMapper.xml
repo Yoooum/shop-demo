@@ -5,7 +5,7 @@
 <mapper namespace="com.prprv.shop.mapper.UserMapper">
 
     <!-- 开启二级缓存，实体类必须实现序列化 -->
-    <cache/>
+<!--    <cache/>-->
 
     <!-- resultMap 自定义映射 -->
     <resultMap id="userMap" type="User">
@@ -51,6 +51,9 @@
                     `email`=#{email}
                 </where>
             </if>
+    </update>
+    <update id="updateUserEnabledById">
+        update `user` set `enabled`=#{enabled} where id=#{id}
     </update>
 
     <!-- int deleteUserById(Long id); -->

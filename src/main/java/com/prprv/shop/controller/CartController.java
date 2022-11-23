@@ -6,6 +6,7 @@ import com.prprv.shop.model.dto.CartDTO;
 import com.prprv.shop.model.entity.Cart;
 import com.prprv.shop.model.vo.CartVO;
 import com.prprv.shop.service.CartService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/cart")
+@CrossOrigin(origins = "*")
 public class CartController {
     @Resource
     private CartService cartService;

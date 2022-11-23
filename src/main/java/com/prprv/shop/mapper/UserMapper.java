@@ -24,4 +24,8 @@ public interface UserMapper {
             @Param("password") String password
     );
     List<User> selectAllUser();
+
+    int updateUserEnabledById(
+            @Param("id") Long id,
+            @Param("enabled") Integer enabled);
 }

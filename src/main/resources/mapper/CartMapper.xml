@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prprv.shop.mapper.CartMapper">
     <!-- 开启二级缓存，实体类必须实现序列化 -->
-    <cache/>
+<!--    <cache/>-->
     <!-- long insertShoppingCart(ShoppingCart shoppingCart); -->
     <!-- 如果已经存在userId和productId则插入失败 -->
     <insert id="insertCart" parameterType="Cart">

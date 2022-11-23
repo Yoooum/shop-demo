@@ -11,7 +11,9 @@ public enum ResponseCode {
     NOT_FOUND(4040, "请求数据不存在"),
     FORBIDDEN(4030, "禁止访问"),
     SYSTEM_ERROR(5000, "系统内部异常"),
-    OPERATION_ERROR(5001, "操作失败");
+    OPERATION_ERROR(5001, "操作失败"),
+    NOT_ACTIVE(5002, "用户未激活"),
+    VERIFY_CODE_EXPIRED(5003, "验证码已过期");
 
     private final int code;
     private final String msg;

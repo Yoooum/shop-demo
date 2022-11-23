@@ -39,4 +39,6 @@ public interface UserService {
      * @return 是否登出成功
      */
     boolean logout(HttpServletRequest request);
+
+    boolean verifyID(Long id, String code);
 }

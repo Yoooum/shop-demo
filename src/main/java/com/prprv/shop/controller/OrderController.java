@@ -5,6 +5,7 @@ import com.prprv.shop.common.SendResponse;
 import com.prprv.shop.model.dto.OrderDTO;
 import com.prprv.shop.model.entity.Order;
 import com.prprv.shop.service.OrderService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/order")
+@CrossOrigin(origins = "*")
 public class OrderController {
     @Resource
     private OrderService orderService;

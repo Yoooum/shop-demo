@@ -6,6 +6,23 @@ spring:
     url: jdbc:mysql://localhost:3306/dev_shop?serverTimezone=UTC
     username:
     password:
+  mail:
+    protocol: smtp
+    host: outlook.office365.com
+    port: 587
+    username: no-reply@prprv.com
+    password: Cay88761@prprv
+    default-encoding: UTF-8
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: outlook.office365.com
 
 server:
   port: 8080
@@ -26,5 +43,6 @@ mybatis:
   type-aliases-package: com.prprv.shop.model.entity
   # 下划线映射为驼峰
   configuration.map-underscore-to-camel-case: true
-
+  # 禁用缓存
+  configuration.cache-enabled: false
 

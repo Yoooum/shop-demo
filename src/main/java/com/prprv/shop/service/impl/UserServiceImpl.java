@@ -1,9 +1,11 @@
 package com.prprv.shop.service.impl;
 
 import com.prprv.shop.common.ResponseCode;
+import com.prprv.shop.common.VerifyCode;
 import com.prprv.shop.exception.RequestException;
 import com.prprv.shop.mapper.UserMapper;
 import com.prprv.shop.model.entity.User;
+import com.prprv.shop.service.MailService;
 import com.prprv.shop.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,27 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private MailService mailService;
 
+    private void sendMail(String to, Long id, String code) {
+        mailService.sendSimpleMail(
+                "Prprv事务局<no-reply@prprv.com>", to,
+                "[Prprv]请进行Prprv ID认证",
+                """
+                        您好，这里是Prprv事务局。
+                        非常感谢您注册Prprv会员。
+                       
+                        您的Prprv ID为：%s
+                                              
+                        请在收到此邮件的5分钟内点击以下链接进行认证：
+                        http://127.0.0.1:8080/verify?id=%s&code=%s
+                        
+                        ※如果您没有注册Prprv会员，请忽略此邮件。
+                        ※本邮件由系统自动发出，请勿回复。
+                        """.formatted(id, id, code)
+        );
+    }
     /**
      * 用户登录
      * @param email 用户账号
@@ -36,6 +58,10 @@ public class UserServiceImpl implements UserService {
         // 用户不存在或者密码错误
         if (user == null) {
             throw new RequestException(ResponseCode.PARAMS_ERROR, "用户不存在或密码错误");
+        }
+        if (user.getEnabled() == 0) {
+            new Thread(() -> sendMail(email, user.getId(), VerifyCode.getInstance().generate(email,5))).start();
+            throw new RequestException(ResponseCode.NOT_ACTIVE, "已发送账号激活邮件，请前往邮箱激活");
         }
         // 登录成功
         request.getSession().setAttribute(USER_LOGIN_STATUS, user);
@@ -76,7 +102,11 @@ public class UserServiceImpl implements UserService {
                 setPassword(password);
             }
         });
-        return userMapper.selectUserByEmail(email).getId();
+
+        Long id = userMapper.selectUserByEmail(email).getId();
+        // 非阻塞发送邮件
+        new Thread(() -> sendMail(email, id, VerifyCode.getInstance().generate(email,5))).start();
+        return id;
     }
 
     /**
@@ -109,5 +139,21 @@ public class UserServiceImpl implements UserService {
         }
         request.getSession().removeAttribute(USER_LOGIN_STATUS);
         return true;
+    }
+
+    @Override
+    public boolean verifyID(Long id, String code) {
+        User user = userMapper.selectUserById(id);
+        if (user == null) {
+            throw new RequestException(ResponseCode.PARAMS_ERROR, "用户不存在");
+        }
+        if (user.getEnabled() == 1) {
+            throw new RequestException(ResponseCode.PARAMS_ERROR, "用户已认证");
+        }
+        if (VerifyCode.getInstance().verify(code)) {
+            int i = userMapper.updateUserEnabledById(id, 1);
+            return i == 1;
+        }
+        return false;
     }
 }
